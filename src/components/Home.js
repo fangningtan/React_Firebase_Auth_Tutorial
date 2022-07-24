@@ -4,16 +4,27 @@ import { useNavigate } from "react-router";
 import { useUserAuth } from "../context/UserAuthContext";
 
 const Home = () => {
-  const { logOut, user } = useUserAuth();
+  const { deleteFirebaseUser, user } = useUserAuth();
   const navigate = useNavigate();
-  const handleLogout = async () => {
+  // const handleLogout = async () => {
+  //   try {
+  //     await logOut();
+  //     navigate("/");
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
+
+  // add delete account function
+  const handleDeleteUser = async () => {
     try {
-      await logOut();
+      await deleteFirebaseUser();
       navigate("/");
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     }
   };
+
   return (
     <>
       <div className="p-4 box mt-3 text-center">
@@ -21,8 +32,8 @@ const Home = () => {
         {user && user.email}
       </div>
       <div className="d-grid gap-2">
-        <Button variant="primary" onClick={handleLogout}>
-          Log out
+        <Button variant="primary" onClick={handleDeleteUser}>
+          Delete my account
         </Button>
       </div>
     </>

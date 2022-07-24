@@ -8,6 +8,7 @@ import {
   signInWithPopup,
   RecaptchaVerifier,
   signInWithPhoneNumber,
+  deleteUser
 } from "firebase/auth";
 import { auth } from "../firebase";
 
@@ -30,15 +31,35 @@ export function UserAuthContextProvider({ children }) {
     return signInWithPopup(auth, googleAuthProvider);
   }
 
-  function setUpRecaptha(number) {
+  function deleteFirebaseUser() {
+    return deleteUser(auth.currentUser);
+  }
+
+  // function setUpRecaptcha(number) {
+  //   const recaptchaVerifier = new RecaptchaVerifier(
+  //     "recaptcha-container",
+  //     {},
+  //     auth
+  //   );
+  //   recaptchaVerifier.render();
+  //   return signInWithPhoneNumber(auth, number, recaptchaVerifier);
+  // }
+
+  function setUpRecaptcha(number) {
     const recaptchaVerifier = new RecaptchaVerifier(
-      "recaptcha-container",
-      {},
+      "phone-num-submit-btn",{
+        'size': 'invisible',
+        'callback': (response) => {
+          // // reCAPTCHA solved, allow signInWithPhoneNumber
+          console.log('it works')
+        }
+      },
       auth
     );
-    recaptchaVerifier.render();
+    // recaptchaVerifier.render();
     return signInWithPhoneNumber(auth, number, recaptchaVerifier);
   }
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
@@ -59,7 +80,8 @@ export function UserAuthContextProvider({ children }) {
         signUp,
         logOut,
         googleSignIn,
-        setUpRecaptha,
+        setUpRecaptcha,
+        deleteFirebaseUser
       }}
     >
       {children}
